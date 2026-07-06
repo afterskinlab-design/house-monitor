@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>주택자금 감시 대시보드</title>
+<style>
+:root{--bg:#0f1420;--card:#1a2130;--card2:#212a3d;--ink:#e8edf5;--muted:#8b96a8;--line:#2b3549;
+--ok:#22c55e;--warn:#eab308;--danger:#ef4444;--buy:#3b82f6;--info:#94a3b8;
+--safe:#3b82f6;--grow:#f97316;--gold:#c9a227}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Malgun Gothic','Apple SD Gothic Neo',-apple-system,sans-serif;background:var(--bg);
+color:var(--ink);line-height:1.5;padding:22px 14px;display:flex;flex-direction:column;align-items:center}
+.wrap{max-width:980px;width:100%}
+.tnum{font-variant-numeric:tabular-nums}
+.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px}
+.head h1{font-size:19px;font-weight:700}
+.head .up{font-size:12px;color:var(--muted)}
+.load{display:flex;gap:8px;align-items:center}
+.btn{height:34px;padding:0 14px;border:1px solid var(--line);border-radius:8px;background:var(--card2);
+color:var(--ink);font:inherit;font-size:12.5px;cursor:pointer;font-weight:600}
+.btn:hover{background:#2a3550;border-color:#3d4a63}
+.btn.primary{background:var(--gold);color:#1a1400;border-color:var(--gold)}
+.signal{border-radius:16px;padding:22px 24px;margin-bottom:16px;border:2px solid;display:flex;align-items:center;gap:18px}
+.signal .dot{width:52px;height:52px;border-radius:50%;flex:0 0 52px;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
+.signal .txt .tag{font-size:12px;font-weight:700;letter-spacing:1px;opacity:.85}
+.signal .txt .msg{font-size:17px;font-weight:700;margin-top:3px}
+.sig-ok{background:rgba(34,197,94,.1);border-color:var(--ok)} .sig-ok .dot{background:var(--ok);box-shadow:0 0 20px var(--ok)}
+.sig-warn{background:rgba(234,179,8,.1);border-color:var(--warn)} .sig-warn .dot{background:var(--warn);box-shadow:0 0 20px var(--warn)}
+.sig-danger{background:rgba(239,68,68,.12);border-color:var(--danger)} .sig-danger .dot{background:var(--danger);box-shadow:0 0 20px var(--danger)}
+.sig-buy{background:rgba(59,130,246,.12);border-color:var(--buy)} .sig-buy .dot{background:var(--buy);box-shadow:0 0 20px var(--buy)}
+.sig-info{background:rgba(148,163,184,.1);border-color:var(--info)} .sig-info .dot{background:var(--info)}
+.prog-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:16px}
+.prog-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+.prog-top .big{font-size:26px;font-weight:800}.prog-top .goal{font-size:13px;color:var(--muted)}
+.prog-bar{height:14px;background:#0c1119;border-radius:7px;overflow:hidden;position:relative}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--safe),#60a5fa);border-radius:7px;transition:width .5s}
+.prog-lbls{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:6px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:16px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px 14px}
+.tile .nm{font-size:12.5px;font-weight:700;display:flex;justify-content:space-between;align-items:center}
+.tile .bk{font-size:9.5px;padding:1px 6px;border-radius:4px;font-weight:700}
+.bk-성장{background:rgba(249,115,22,.15);color:var(--grow)}
+.bk-지표{background:rgba(148,163,184,.15);color:var(--info)}
+.bk-위성{background:rgba(59,130,246,.15);color:var(--buy)}
+.tile .px{font-size:19px;font-weight:800;margin-top:6px;font-variant-numeric:tabular-nums}
+.tile .row{display:flex;justify-content:space-between;font-size:11px;margin-top:4px}
+.up{color:var(--ok)}.down{color:var(--danger)}.muted{color:var(--muted)}
+.ddbar{height:5px;background:#0c1119;border-radius:3px;margin-top:8px;overflow:hidden}
+.ddbar>i{display:block;height:100%;border-radius:3px}
+.rules{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 20px;margin-bottom:14px}
+.rules h2{font-size:14px;font-weight:700;margin-bottom:10px}
+.rules table{width:100%;border-collapse:collapse;font-size:12px}
+.rules td{padding:5px 6px;border-bottom:1px solid var(--line)}
+.rules td:first-child{color:var(--muted);white-space:nowrap;width:130px}
+.rr{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:middle}
+.setup{font-size:11.5px;color:var(--muted);background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 18px;line-height:1.8}
+.setup b{color:var(--ink)} .setup code{background:#0c1119;padding:1px 6px;border-radius:4px;font-family:ui-monospace,monospace;color:#7fd6c8}
+.foot{font-size:11px;color:var(--muted);text-align:center;line-height:1.7;padding:10px 0}
+input[type=file]{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <div><h1>🏠 주택자금 감시 대시보드</h1><div class="up" id="updated">—</div></div>
+    <div class="load">
+      <label class="btn" for="fileInput">📁 데이터 불러오기</label>
+      <input type="file" id="fileInput" accept=".json">
+      <button class="btn primary" onclick="location.reload()">↻ 새로고침</button>
+    </div>
+  </div>
+  <div id="signalBox"></div>
+  <div class="prog-card">
+    <div class="prog-top">
+      <div><span class="big tnum" id="curAsset">—</span> <span class="goal">/ 목표 <span id="goalAsset">—</span></span></div>
+      <div class="goal">진행률 <b class="tnum" id="progPct" style="color:var(--safe);font-size:16px">—</b></div>
+    </div>
+    <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+    <div class="prog-lbls"><span>0</span><span>목표 자기자본</span></div>
+  </div>
+  <div class="grid" id="tiles"></div>
+  <div class="rules">
+    <h2>⚙️ 방어 트리거 규칙</h2>
+    <table>
+      <tr><td><span class="rr" style="background:var(--danger)"></span>목표 달성</td><td>자기자본 8억 도달 → 성장블록 <b>전량 안전 전환</b>, 잔금까지 지키기</td></tr>
+      <tr><td><span class="rr" style="background:var(--buy)"></span>폭락 사다리</td><td>나스닥 −20%: 안전 절반 투입 / −30%: 나머지 / −40%: 파킹까지 <b>저가매수</b></td></tr>
+      <tr><td><span class="rr" style="background:var(--warn)"></span>조정 주의</td><td>나스닥 −10%: 사다리 대기, 추가 하락 감시</td></tr>
+      <tr><td><span class="rr" style="background:var(--danger)"></span>잔금 임박</td><td>D-6개월: 성장블록 <b>전량 안전자산 전환</b> (수익 미련 없이)</td></tr>
+      <tr><td><span class="rr" style="background:var(--ok)"></span>정상</td><td>트리거 없음 → 계획대로 정액 적립 유지 (우상향 안 믿어도 규율대로)</td></tr>
+    </table>
+  </div>
+  <div class="setup">
+    <b>📌 사용법 (하루 1회):</b> ① 터미널에서 <code>python house_monitor.py</code> 실행 (미장 마감 후 아침 권장) →
+    ② 같은 폴더에 <code>dashboard_data.json</code> 생성됨 → ③ 이 페이지에서 <b>데이터 불러오기</b>로 그 파일 선택.<br>
+    <b>자동화:</b> 스크립트를 crontab(Mac/Linux)이나 작업 스케줄러(Windows)에 등록하면 매일 자동 수집. 매수·납입 시 스크립트의 <code>CURRENT_ASSET</code> 값만 갱신하세요.<br>
+    <b>지금 화면은</b> 방금 수집한 실제 7/2 종가 데모입니다.
+  </div>
+  <div class="foot">
+    yfinance 종가 기준 · 하루 1회 판정용 (초단위 실시간 아님) · 방어 신호는 참고용이며 최종 판단은 투자자 본인<br>
+    감시 종목: QQQM·VOO·SCHD(성장) / 나스닥·KODEX200(지표) / 0167A0(위성) · 대출 2억 규제한도 고정 플랜
+  </div>
+</div>
+<script>
+const DEMO = {"updated": "2026-07-05 21:46", "target_equity": 8.0, "current_asset": 2.0, "progress_pct": 25.0, "jandang_date": "2030-07-01", "prices": {"QQQM": {"name": "나스닥100", "block": "성장", "market": "미장", "close": 293.42, "change": -1.74, "high_1y": 306.87, "drawdown": -4.4, "date": "2026-07-02"}, "VOO": {"name": "S&P500", "block": "성장", "market": "미장", "close": 684.84, "change": -0.09, "high_1y": 696.23, "drawdown": -1.6, "date": "2026-07-02"}, "SCHD": {"name": "배당성장", "block": "성장", "market": "미장", "close": 32.39, "change": 1.7, "high_1y": 32.57, "drawdown": -0.6, "date": "2026-07-02"}, "^IXIC": {"name": "나스닥지수", "block": "지표", "market": "미장", "close": 25832.67, "change": -0.8, "high_1y": 27093.9, "drawdown": -4.7, "date": "2026-07-02"}, "069500.KS": {"name": "KODEX200", "block": "지표", "market": "국장", "close": 131010.0, "change": 6.06, "high_1y": 148355.0, "drawdown": -11.7, "date": "2026-07-03"}, "0167A0.KS": {"name": "SOL AI반도체", "block": "위성", "market": "국장", "close": 24435.0, "change": 4.65, "high_1y": 28935.0, "drawdown": -15.6, "date": "2026-07-03"}}, "signals": [{"tag": "정상", "level": "ok", "msg": "트리거 없음 — 계획대로 정액 적립 유지"}]};
+const LV={ok:'sig-ok',warn:'sig-warn',danger:'sig-danger',buy:'sig-buy',info:'sig-info'};
+function render(d){
+  document.getElementById('updated').textContent = '최종 수집: '+d.updated+'  ·  종가일 기준';
+  const box=document.getElementById('signalBox'); box.innerHTML='';
+  (d.signals||[]).forEach(s=>{
+    const el=document.createElement('div');
+    el.className='signal '+(LV[s.level]||'sig-info');
+    el.innerHTML='<div class="dot"></div><div class="txt"><div class="tag">['+s.tag+']</div><div class="msg">'+s.msg+'</div></div>';
+    box.appendChild(el);
+  });
+  document.getElementById('curAsset').textContent=d.current_asset+'억';
+  document.getElementById('goalAsset').textContent=d.target_equity+'억';
+  document.getElementById('progPct').textContent=d.progress_pct+'%';
+  document.getElementById('progFill').style.width=Math.min(100,d.progress_pct)+'%';
+  const g=document.getElementById('tiles'); g.innerHTML='';
+  Object.entries(d.prices||{}).forEach(([tk,p])=>{
+    if(p.error){ g.innerHTML+='<div class="tile"><div class="nm">'+p.name+'</div><div class="muted" style="font-size:11px;margin-top:8px">'+p.error+'</div></div>'; return; }
+    const chCl=p.change>=0?'up':'down';
+    const ddColor=p.drawdown<=-30?'var(--danger)':(p.drawdown<=-20?'var(--buy)':(p.drawdown<=-10?'var(--warn)':'var(--ok)'));
+    const ddW=Math.min(100,Math.abs(p.drawdown)*2.5);
+    const pxStr=p.market==='국장'?Number(p.close).toLocaleString('ko-KR'):p.close.toLocaleString('en-US');
+    g.innerHTML+='<div class="tile"><div class="nm">'+p.name+'<span class="bk bk-'+p.block+'">'+p.block+'</span></div>'+
+      '<div class="px">'+pxStr+'</div>'+
+      '<div class="row"><span class="muted">전일</span><span class="'+chCl+'">'+(p.change>=0?'+':'')+p.change+'%</span></div>'+
+      '<div class="row"><span class="muted">고점대비</span><span style="color:'+ddColor+'">'+p.drawdown+'%</span></div>'+
+      '<div class="ddbar"><i style="width:'+ddW+'%;background:'+ddColor+'"></i></div></div>';
+  });
+}
+document.getElementById('fileInput').addEventListener('change',e=>{
+  const f=e.target.files[0]; if(!f)return;
+  const r=new FileReader();
+  r.onload=ev=>{ try{ render(JSON.parse(ev.target.result)); }catch(err){ alert('JSON 읽기 실패: '+err); } };
+  r.readAsText(f);
+});
+
+// ===== 자동 로드: 깃허브에 올린 dashboard_data.json을 자동으로 가져옴 =====
+// 아래 GITHUB_USER, REPO를 본인 것으로 바꾸면 파일 열 때마다 최신 데이터 자동 표시
+const GITHUB_USER = "YOUR_ID";      // ← 깃허브 아이디로 변경
+const REPO = "house-monitor";        // ← 저장소 이름 (그대로 두면 됨)
+const JSON_URL = `https://raw.githubusercontent.com/${GITHUB_USER}/${REPO}/main/dashboard_data.json`;
+
+async function autoLoad(){
+  if(GITHUB_USER === "YOUR_ID"){
+    // 아직 설정 전 → 데모 표시
+    document.getElementById('updated').textContent += '  (데모 · 설정 전)';
+    render(DEMO);
+    return;
+  }
+  try{
+    const res = await fetch(JSON_URL + '?t=' + Date.now());  // 캐시 방지
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const data = await res.json();
+    render(data);
+  }catch(err){
+    console.warn('자동 로드 실패, 데모 표시:', err);
+    document.getElementById('updated').textContent += '  (자동로드 실패 · 데모)';
+    render(DEMO);
+  }
+}
+autoLoad();
+
+</script>
+</body>
+</html>
