@@ -55,6 +55,26 @@ color:var(--ink);font:inherit;font-size:12.5px;cursor:pointer;font-weight:600}
 .rules td{padding:5px 6px;border-bottom:1px solid var(--line)}
 .rules td:first-child{color:var(--muted);white-space:nowrap;width:130px}
 .rr{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:middle}
+.orders{background:var(--card);border:1px solid var(--gold);border-radius:14px;padding:18px 20px;margin-bottom:14px}
+.orders h2{font-size:15px;font-weight:700;margin-bottom:4px;color:var(--gold)}
+.orders .fxline{font-size:12px;color:var(--muted);margin-bottom:14px}
+.orders .fxline b{color:var(--ink)}
+.ord-sec{margin-bottom:16px}
+.ord-sec .lbl{font-size:12.5px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.ord-sec .lbl .pin{font-size:10px;padding:2px 8px;border-radius:5px;font-weight:700}
+.pin-now{background:rgba(239,68,68,.18);color:#fca5a5}
+.pin-split{background:rgba(59,130,246,.18);color:#93c5fd}
+.pin-mon{background:rgba(34,197,94,.18);color:#86efac}
+.ordtbl{width:100%;border-collapse:collapse;font-size:12.5px}
+.ordtbl th{font-size:10.5px;color:var(--muted);text-align:right;padding:5px 8px;border-bottom:1px solid var(--line);font-weight:600}
+.ordtbl th:first-child{text-align:left}
+.ordtbl td{padding:6px 8px;border-bottom:1px solid rgba(43,53,73,.5);text-align:right;font-variant-numeric:tabular-nums}
+.ordtbl td:first-child{text-align:left;font-weight:600}
+.ordtbl .sh{color:var(--gold);font-weight:800;font-size:14px}
+.ordtbl tr:last-child td{border-bottom:none}
+.ord-safe{background:var(--card2);border-radius:9px;padding:10px 12px;font-size:12px;display:flex;gap:14px;flex-wrap:wrap}
+.ord-safe span b{color:var(--safe)}
+.ord-note{font-size:11px;color:var(--muted);margin-top:10px;line-height:1.7}
 .setup{font-size:11.5px;color:var(--muted);background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 18px;line-height:1.8}
 .setup b{color:var(--ink)} .setup code{background:#0c1119;padding:1px 6px;border-radius:4px;font-family:ui-monospace,monospace;color:#7fd6c8}
 .foot{font-size:11px;color:var(--muted);text-align:center;line-height:1.7;padding:10px 0}
@@ -80,6 +100,26 @@ input[type=file]{display:none}
     <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
     <div class="prog-lbls"><span>0</span><span>목표 자기자본</span></div>
   </div>
+  <div class="orders" id="ordersCard" style="display:none">
+    <h2>💰 오늘의 주문서</h2>
+    <div class="fxline" id="fxLine"></div>
+    <div class="ord-sec">
+      <div class="lbl"><span class="pin pin-now">지금 즉시</span> 성장블록 50% 매수 (달러 환전 후)</div>
+      <table class="ordtbl"><thead><tr><th>종목</th><th>수량</th><th>금액(원)</th><th>단가($)</th></tr></thead><tbody id="ordNow"></tbody></table>
+      <div class="ord-safe" style="margin-top:10px"><span>+ 안전블록 즉시 전액:</span><span id="safeAlloc"></span></div>
+    </div>
+    <div class="ord-sec">
+      <div class="lbl"><span class="pin pin-split">8주 분할</span> 성장블록 나머지 50% (매주)</div>
+      <table class="ordtbl"><thead><tr><th>종목</th><th>매주 수량</th><th>매주 금액</th></tr></thead><tbody id="ordSplit"></tbody></table>
+    </div>
+    <div class="ord-sec">
+      <div class="lbl"><span class="pin pin-mon">매달 적립</span> 월 1,000만 (1년차 성장 70%)</div>
+      <table class="ordtbl"><thead><tr><th>종목</th><th>수량</th><th>금액</th></tr></thead><tbody id="ordMon"></tbody></table>
+      <div class="ord-safe" style="margin-top:10px"><span>+ 안전블록 매달:</span><span id="monSafe"></span></div>
+    </div>
+    <div class="ord-note" id="ordNote"></div>
+  </div>
+
   <div class="grid" id="tiles"></div>
   <div class="rules">
     <h2>⚙️ 방어 트리거 규칙</h2>
@@ -103,7 +143,7 @@ input[type=file]{display:none}
   </div>
 </div>
 <script>
-const DEMO = {"updated": "2026-07-05 21:46", "target_equity": 8.0, "current_asset": 2.0, "progress_pct": 25.0, "jandang_date": "2030-07-01", "prices": {"QQQM": {"name": "나스닥100", "block": "성장", "market": "미장", "close": 293.42, "change": -1.74, "high_1y": 306.87, "drawdown": -4.4, "date": "2026-07-02"}, "VOO": {"name": "S&P500", "block": "성장", "market": "미장", "close": 684.84, "change": -0.09, "high_1y": 696.23, "drawdown": -1.6, "date": "2026-07-02"}, "SCHD": {"name": "배당성장", "block": "성장", "market": "미장", "close": 32.39, "change": 1.7, "high_1y": 32.57, "drawdown": -0.6, "date": "2026-07-02"}, "^IXIC": {"name": "나스닥지수", "block": "지표", "market": "미장", "close": 25832.67, "change": -0.8, "high_1y": 27093.9, "drawdown": -4.7, "date": "2026-07-02"}, "069500.KS": {"name": "KODEX200", "block": "지표", "market": "국장", "close": 131010.0, "change": 6.06, "high_1y": 148355.0, "drawdown": -11.7, "date": "2026-07-03"}, "0167A0.KS": {"name": "SOL AI반도체", "block": "위성", "market": "국장", "close": 24435.0, "change": 4.65, "high_1y": 28935.0, "drawdown": -15.6, "date": "2026-07-03"}}, "signals": [{"tag": "정상", "level": "ok", "msg": "트리거 없음 — 계획대로 정액 적립 유지"}]};
+const DEMO = {"updated": "2026-07-06 00:37 (KST 새벽 자동수집)", "target_equity": 8.0, "current_asset": 2.0, "progress_pct": 25.0, "jandang_date": "2030-07-01", "prices": {"QQQM": {"name": "나스닥100", "block": "성장", "market": "미장", "close": 293.42, "change": -1.74, "high_1y": 306.87, "drawdown": -4.4, "date": "2026-07-02"}, "VOO": {"name": "S&P500", "block": "성장", "market": "미장", "close": 684.84, "change": -0.09, "high_1y": 696.23, "drawdown": -1.6, "date": "2026-07-02"}, "SCHD": {"name": "배당성장", "block": "성장", "market": "미장", "close": 32.39, "change": 1.7, "high_1y": 32.57, "drawdown": -0.6, "date": "2026-07-02"}, "^IXIC": {"name": "나스닥지수", "block": "지표", "market": "미장", "close": 25832.67, "change": -0.8, "high_1y": 27093.9, "drawdown": -4.7, "date": "2026-07-02"}, "069500.KS": {"name": "KODEX200", "block": "지표", "market": "국장", "close": 134410.0, "change": 2.6, "high_1y": 148355.0, "drawdown": -9.4, "date": "2026-07-06"}, "0167A0.KS": {"name": "SOL AI반도체", "block": "위성", "market": "국장", "close": 24870.0, "change": 1.78, "high_1y": 28935.0, "drawdown": -14.0, "date": "2026-07-06"}, "KRW=X": {"name": "원/달러환율", "block": "환율", "market": "환율", "close": 1531.08, "change": -0.72, "high_1y": 1554.48, "drawdown": -1.5, "date": "2026-07-06"}}, "orders": {"fx": 1531.08, "grow_total": 140000000, "safe_total": 60000000, "seed_now": {"QQQM": {"shares": 77, "krw": 35000000, "px": 293.42}, "VOO": {"shares": 23, "krw": 24500000, "px": 684.84}, "SCHD": {"shares": 211, "krw": 10500000, "px": 32.39}}, "seed_split": {"QQQM": {"shares": 9, "krw": 4375000}, "VOO": {"shares": 2, "krw": 3062500}, "SCHD": {"shares": 26, "krw": 1312500}}, "monthly": {"QQQM": {"shares": 7, "krw": 3500000}, "VOO": {"shares": 2, "krw": 2450000}, "SCHD": {"shares": 21, "krw": 1050000}}, "monthly_safe": 3000000, "safe_alloc": {"파킹/CMA": 24000000, "단기채ETF": 21000000, "정기예금": 15000000}}, "signals": [{"tag": "정상", "level": "ok", "msg": "트리거 없음 — 계획대로 정액 적립 유지"}]};
 const LV={ok:'sig-ok',warn:'sig-warn',danger:'sig-danger',buy:'sig-buy',info:'sig-info'};
 function render(d){
   document.getElementById('updated').textContent = '최종 수집: '+d.updated+'  ·  종가일 기준';
@@ -118,6 +158,31 @@ function render(d){
   document.getElementById('goalAsset').textContent=d.target_equity+'억';
   document.getElementById('progPct').textContent=d.progress_pct+'%';
   document.getElementById('progFill').style.width=Math.min(100,d.progress_pct)+'%';
+
+  // 주문서 렌더
+  if(d.orders){
+    const o=d.orders;
+    document.getElementById('ordersCard').style.display='block';
+    const won=n=>Math.round(n/1e4).toLocaleString('ko-KR')+'만';
+    document.getElementById('fxLine').innerHTML='적용 환율 <b>'+o.fx.toLocaleString()+'원</b>/$ · 성장블록 '+won(o.grow_total)+' / 안전블록 '+won(o.safe_total)+' (1년차 70:30)';
+    const names={QQQM:'QQQM (나스닥100)',VOO:'VOO (S&P500)',SCHD:'SCHD (배당성장)'};
+    let h1='';
+    for(const tk of ['QQQM','VOO','SCHD']){ const x=o.seed_now[tk]; h1+='<tr><td>'+names[tk]+'</td><td class="sh">'+x.shares+'주</td><td>'+won(x.krw)+'</td><td>$'+x.px+'</td></tr>'; }
+    document.getElementById('ordNow').innerHTML=h1;
+    document.getElementById('safeAlloc').innerHTML=Object.entries(o.safe_alloc).map(([k,v])=>k+' <b>'+won(v)+'</b>').join(' · ');
+    let h2='';
+    for(const tk of ['QQQM','VOO','SCHD']){ const x=o.seed_split[tk]; h2+='<tr><td>'+names[tk]+'</td><td class="sh">'+x.shares+'주</td><td>'+won(x.krw)+'</td></tr>'; }
+    document.getElementById('ordSplit').innerHTML=h2;
+    let h3='';
+    for(const tk of ['QQQM','VOO','SCHD']){ const x=o.monthly[tk]; h3+='<tr><td>'+names[tk]+'</td><td class="sh">'+x.shares+'주</td><td>'+won(x.krw)+'</td></tr>'; }
+    document.getElementById('ordMon').innerHTML=h3;
+    document.getElementById('monSafe').innerHTML='파킹 <b>'+won(o.monthly_safe*0.4)+'</b> · 단기채 <b>'+won(o.monthly_safe*0.35)+'</b> · 예금 <b>'+won(o.monthly_safe*0.25)+'</b>';
+    // 신호 연동 안내
+    const lv=(d.signals&&d.signals[0])?d.signals[0].level:'ok';
+    const noteMap={ok:'🟢 정상 — 위 주문서대로 진행하세요.',warn:'🟡 조정주의 — 매수는 하되 폭락 대비 현금 대기.',buy:'🔵 폭락 — 안전블록 현금을 성장블록으로 몰아서 저가매수!',danger:'🔴 방어 — 매수 중단, 성장블록 전량 안전자산 전환!',info:''};
+    document.getElementById('ordNote').innerHTML=(noteMap[lv]||'')+' · 환율은 자동 수집값 기준이며, 실제 환전 시점에 따라 수량이 소폭 달라질 수 있어요. 달러 환전은 4주 분할 권장.';
+  }
+
   const g=document.getElementById('tiles'); g.innerHTML='';
   Object.entries(d.prices||{}).forEach(([tk,p])=>{
     if(p.error){ g.innerHTML+='<div class="tile"><div class="nm">'+p.name+'</div><div class="muted" style="font-size:11px;margin-top:8px">'+p.error+'</div></div>'; return; }
@@ -141,26 +206,24 @@ document.getElementById('fileInput').addEventListener('change',e=>{
 
 // ===== 자동 로드: 깃허브에 올린 dashboard_data.json을 자동으로 가져옴 =====
 // 아래 GITHUB_USER, REPO를 본인 것으로 바꾸면 파일 열 때마다 최신 데이터 자동 표시
-const GITHUB_USER = "YOUR_ID";      // ← 깃허브 아이디로 변경
+const GITHUB_USER = "afterskinlab-design";      // ← 깃허브 아이디로 변경
 const REPO = "house-monitor";        // ← 저장소 이름 (그대로 두면 됨)
 const JSON_URL = `https://raw.githubusercontent.com/${GITHUB_USER}/${REPO}/main/dashboard_data.json`;
 
 async function autoLoad(){
-  if(GITHUB_USER === "YOUR_ID"){
-    // 아직 설정 전 → 데모 표시
-    document.getElementById('updated').textContent += '  (데모 · 설정 전)';
-    render(DEMO);
-    return;
-  }
+  // 1) 일단 데모(또는 마지막 수집분)를 즉시 표시 — 화면이 항상 뜨도록
+  render(DEMO);
+  // 2) 아이디 설정돼 있으면 백그라운드로 최신 데이터 가져와 덮어쓰기
+  if(GITHUB_USER === "YOUR_ID") return;
   try{
-    const res = await fetch(JSON_URL + '?t=' + Date.now());  // 캐시 방지
+    const res = await fetch(JSON_URL + '?t=' + Date.now());
     if(!res.ok) throw new Error('HTTP '+res.status);
     const data = await res.json();
-    render(data);
+    render(data);   // 성공 시 최신으로 갱신
   }catch(err){
-    console.warn('자동 로드 실패, 데모 표시:', err);
-    document.getElementById('updated').textContent += '  (자동로드 실패 · 데모)';
-    render(DEMO);
+    console.warn('최신 데이터 로드 실패 — 데모 유지:', err);
+    const u=document.getElementById('updated');
+    if(u && !u.textContent.includes('오프라인')) u.textContent += '  (오프라인·데모 · 온라인 시 자동 갱신)';
   }
 }
 autoLoad();
