@@ -15,7 +15,15 @@ WATCH = {
     "^IXIC":    ("나스닥지수",   "지표", "미장"),
     "069500.KS":("KODEX200",  "지표", "국장"),
     "0167A0.KS":("SOL AI반도체","위성", "국장"),
+    "KRW=X":    ("원/달러환율", "환율", "환율"),
 }
+
+# ===== 시드/적립 설정 (주문서 계산용) =====
+SEED_TOTAL   = 2.0    # 시드 총액(억) — 아직 미투입분
+MONTHLY      = 1000   # 월 적립(만원)
+GROW_RATIO   = 0.70   # 1년차 성장블록 비중 (글라이드: 70→60→40→20)
+GROW_MIX     = {"QQQM":0.50, "VOO":0.35, "SCHD":0.15}   # 성장블록 내부 배분
+IMMEDIATE    = 0.50   # 성장블록 즉시 투입 비율 (나머지 8주 분할)
 # ====================================================
 
 def fetch():
@@ -34,6 +42,44 @@ def fetch():
         except Exception as e:
             out[tk]={"name":name,"block":block,"market":mkt,"error":str(e)}
     return out
+
+
+def build_orders(data):
+    """현재가·환율 기반 주문서 산출"""
+    fx = data.get("KRW=X",{}).get("close",1385)
+    px = {tk:data.get(tk,{}).get("close",0) for tk in ["QQQM","VOO","SCHD"]}
+    grow_krw = SEED_TOTAL*1e8*GROW_RATIO
+    safe_krw = SEED_TOTAL*1e8*(1-GROW_RATIO)
+
+    def shares(tk, krw):
+        if px[tk]<=0 or fx<=0: return 0
+        return int((krw/fx)/px[tk])
+
+    # 시드 즉시분(성장 50%)
+    seed_now = {}
+    for tk,w in GROW_MIX.items():
+        krw = grow_krw*w*IMMEDIATE
+        seed_now[tk] = {"shares":shares(tk,krw), "krw":round(krw), "px":px[tk]}
+    # 시드 분할분(성장 나머지 50%, 8주)
+    seed_split = {}
+    for tk,w in GROW_MIX.items():
+        krw = grow_krw*w*(1-IMMEDIATE)/8
+        seed_split[tk] = {"shares":shares(tk,krw), "krw":round(krw)}
+    # 월적립(성장 GROW_RATIO)
+    mon_grow = MONTHLY*1e4*GROW_RATIO
+    monthly = {}
+    for tk,w in GROW_MIX.items():
+        krw = mon_grow*w
+        monthly[tk] = {"shares":shares(tk,krw), "krw":round(krw)}
+
+    return {
+        "fx": round(fx,2),
+        "grow_total": round(grow_krw), "safe_total": round(safe_krw),
+        "seed_now": seed_now, "seed_split": seed_split,
+        "monthly": monthly,
+        "monthly_safe": round(MONTHLY*1e4*(1-GROW_RATIO)),
+        "safe_alloc": {"파킹/CMA":round(safe_krw*0.40),"단기채ETF":round(safe_krw*0.35),"정기예금":round(safe_krw*0.25)},
+    }
 
 def judge(data):
     sig=[]; pct=CURRENT_ASSET/TARGET_EQUITY*100
@@ -61,6 +107,7 @@ def main():
     payload={"updated":datetime.datetime.now().strftime("%Y-%m-%d %H:%M")+" (KST 새벽 자동수집)",
         "target_equity":TARGET_EQUITY,"current_asset":CURRENT_ASSET,"progress_pct":pct,
         "jandang_date":JANDANG_DATE,"prices":data,
+        "orders":build_orders(data),
         "signals":[{"tag":t,"level":l,"msg":m} for t,l,m in signals]}
     json.dump(payload,open("dashboard_data.json","w",encoding="utf-8"),ensure_ascii=False,indent=2)
     print("저장 완료 → dashboard_data.json")
