@@ -78,7 +78,16 @@ def build_orders(data):
         "seed_now": seed_now, "seed_split": seed_split,
         "monthly": monthly,
         "monthly_safe": round(MONTHLY*1e4*(1-GROW_RATIO)),
-        "safe_alloc": {"파킹/CMA":round(safe_krw*0.40),"단기채ETF":round(safe_krw*0.35),"정기예금":round(safe_krw*0.25)},
+        "safe_alloc": {
+            "파킹통장·CMA":round(safe_krw*0.40),
+            "단기채 ETF":round(safe_krw*0.35),
+            "정기예금":round(safe_krw*0.25)
+        },
+        "safe_products": {
+            "파킹통장·CMA": "OK저축 읽어보는통장 / SC제일 Hi통장 / 발행어음형 CMA (한투·미래)",
+            "단기채 ETF": "TIGER CD금리투자KIS 357870 (또는 KODEX CD금리액티브 459580)",
+            "정기예금": "저축은행 12개월 (SBI·OK·웰컴 등) / 은행연합회 금리비교로 최고금리 확인"
+        },
     }
 
 def judge(data):
