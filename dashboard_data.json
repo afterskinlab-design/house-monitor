@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-06 06:11 (KST 새벽 자동수집)",
+  "updated": "2026-07-06 22:09 (KST 새벽 자동수집)",
   "target_equity": 8.0,
   "current_asset": 2.0,
   "progress_pct": 25.0,
@@ -9,92 +9,92 @@
       "name": "나스닥100",
       "block": "성장",
       "market": "미장",
-      "close": 293.42,
-      "change": -1.74,
+      "close": 297.52,
+      "change": 1.4,
       "high_1y": 306.87,
-      "drawdown": -4.4,
-      "date": "2026-07-02"
+      "drawdown": -3.0,
+      "date": "2026-07-06"
     },
     "VOO": {
       "name": "S&P500",
       "block": "성장",
       "market": "미장",
-      "close": 684.84,
-      "change": -0.09,
+      "close": 690.62,
+      "change": 0.84,
       "high_1y": 696.23,
-      "drawdown": -1.6,
-      "date": "2026-07-02"
+      "drawdown": -0.8,
+      "date": "2026-07-06"
     },
     "SCHD": {
       "name": "배당성장",
       "block": "성장",
       "market": "미장",
-      "close": 32.39,
-      "change": 1.7,
+      "close": 32.24,
+      "change": -0.46,
       "high_1y": 32.57,
-      "drawdown": -0.6,
-      "date": "2026-07-02"
+      "drawdown": -1.0,
+      "date": "2026-07-06"
     },
     "^IXIC": {
       "name": "나스닥지수",
       "block": "지표",
       "market": "미장",
-      "close": 25832.67,
-      "change": -0.8,
+      "close": 26121.16,
+      "change": 1.12,
       "high_1y": 27093.9,
-      "drawdown": -4.7,
-      "date": "2026-07-02"
+      "drawdown": -3.6,
+      "date": "2026-07-06"
     },
     "069500.KS": {
       "name": "KODEX200",
       "block": "지표",
       "market": "국장",
-      "close": 128795.0,
-      "change": -1.69,
+      "close": 130125.0,
+      "change": -0.68,
       "high_1y": 148355.0,
-      "drawdown": -13.2,
+      "drawdown": -12.3,
       "date": "2026-07-06"
     },
     "0167A0.KS": {
       "name": "SOL AI반도체",
       "block": "위성",
       "market": "국장",
-      "close": 23160.0,
-      "change": -5.22,
+      "close": 23375.0,
+      "change": -4.34,
       "high_1y": 28935.0,
-      "drawdown": -20.0,
+      "drawdown": -19.2,
       "date": "2026-07-06"
     },
     "KRW=X": {
       "name": "원/달러환율",
       "block": "환율",
       "market": "환율",
-      "close": 1530.68,
-      "change": -0.74,
+      "close": 1529.71,
+      "change": -0.81,
       "high_1y": 1554.48,
-      "drawdown": -1.5,
+      "drawdown": -1.6,
       "date": "2026-07-06"
     }
   },
   "orders": {
-    "fx": 1530.68,
+    "fx": 1529.71,
     "grow_total": 140000000,
     "safe_total": 60000000,
     "seed_now": {
       "QQQM": {
-        "shares": 77,
+        "shares": 76,
         "krw": 35000000,
-        "px": 293.42
+        "px": 297.52
       },
       "VOO": {
         "shares": 23,
         "krw": 24500000,
-        "px": 684.84
+        "px": 690.62
       },
       "SCHD": {
-        "shares": 211,
+        "shares": 212,
         "krw": 10500000,
-        "px": 32.39
+        "px": 32.24
       }
     },
     "seed_split": {
