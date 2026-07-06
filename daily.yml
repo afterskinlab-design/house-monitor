@@ -1,0 +1,26 @@
+name: 주택자금 종가 수집
+on:
+  schedule:
+    - cron: '0 21 * * *'   # UTC 21시 = 한국시간 새벽 6시 (미장·국장 전날종가 반영 완료)
+  workflow_dispatch:        # 수동 실행 버튼도 활성화
+permissions:
+  contents: write
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: 라이브러리 설치
+        run: pip install yfinance
+      - name: 종가 수집
+        run: python monitor.py
+      - name: 결과 저장(커밋)
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add dashboard_data.json
+          git commit -m "종가 갱신 $(date -u +%Y-%m-%d)" || echo "변경 없음"
+          git push

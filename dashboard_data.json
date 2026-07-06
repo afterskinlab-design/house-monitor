@@ -1,0 +1,76 @@
+{
+  "updated": "2026-07-05 21:46",
+  "target_equity": 8.0,
+  "current_asset": 2.0,
+  "progress_pct": 25.0,
+  "jandang_date": "2030-07-01",
+  "prices": {
+    "QQQM": {
+      "name": "나스닥100",
+      "block": "성장",
+      "market": "미장",
+      "close": 293.42,
+      "change": -1.74,
+      "high_1y": 306.87,
+      "drawdown": -4.4,
+      "date": "2026-07-02"
+    },
+    "VOO": {
+      "name": "S&P500",
+      "block": "성장",
+      "market": "미장",
+      "close": 684.84,
+      "change": -0.09,
+      "high_1y": 696.23,
+      "drawdown": -1.6,
+      "date": "2026-07-02"
+    },
+    "SCHD": {
+      "name": "배당성장",
+      "block": "성장",
+      "market": "미장",
+      "close": 32.39,
+      "change": 1.7,
+      "high_1y": 32.57,
+      "drawdown": -0.6,
+      "date": "2026-07-02"
+    },
+    "^IXIC": {
+      "name": "나스닥지수",
+      "block": "지표",
+      "market": "미장",
+      "close": 25832.67,
+      "change": -0.8,
+      "high_1y": 27093.9,
+      "drawdown": -4.7,
+      "date": "2026-07-02"
+    },
+    "069500.KS": {
+      "name": "KODEX200",
+      "block": "지표",
+      "market": "국장",
+      "close": 131010.0,
+      "change": 6.06,
+      "high_1y": 148355.0,
+      "drawdown": -11.7,
+      "date": "2026-07-03"
+    },
+    "0167A0.KS": {
+      "name": "SOL AI반도체",
+      "block": "위성",
+      "market": "국장",
+      "close": 24435.0,
+      "change": 4.65,
+      "high_1y": 28935.0,
+      "drawdown": -15.6,
+      "date": "2026-07-03"
+    }
+  },
+  "signals": [
+    {
+      "tag": "정상",
+      "level": "ok",
+      "msg": "트리거 없음 — 계획대로 정액 적립 유지"
+    }
+  ]
+}
