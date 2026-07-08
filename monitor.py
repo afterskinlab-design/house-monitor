@@ -79,14 +79,14 @@ def build_orders(data):
         "monthly": monthly,
         "monthly_safe": round(MONTHLY*1e4*(1-GROW_RATIO)),
         "safe_alloc": {
-            "파킹통장·CMA":round(safe_krw*0.40),
-            "단기채 ETF":round(safe_krw*0.35),
-            "정기예금":round(safe_krw*0.25)
+            "파킹통장·CMA (원화)":round(safe_krw*0.40),
+            "달러 단기채 (환노출)":round(safe_krw*0.30),
+            "예금·CD (원화)":round(safe_krw*0.30)
         },
         "safe_products": {
-            "파킹통장·CMA": "OK저축 읽어보는통장 / SC제일 Hi통장 / 발행어음형 CMA (한투·미래)",
-            "단기채 ETF": "TIGER CD금리투자KIS 357870 (또는 KODEX CD금리액티브 459580)",
-            "정기예금": "저축은행 12개월 (SBI·OK·웰컴 등) / 은행연합회 금리비교로 최고금리 확인"
+            "파킹통장·CMA (원화)": "OK저축 읽어보는통장 / SC제일 Hi통장 / 발행어음형 CMA (한투·미래)",
+            "달러 단기채 (환노출)": "TIGER 미국달러단기채권액티브 329750 — 미국금리 4~5% + 환율 노출",
+            "예금·CD (원화)": "TIGER CD금리투자KIS 357870 / 저축은행 정기예금 12개월"
         },
     }
 
@@ -97,17 +97,28 @@ def judge(data):
     elif pct>=90:
         sig.append(("목표임박","warn",f"목표의 {pct:.0f}% — 성장비중 축소 고려"))
     dd=data.get("^IXIC",{}).get("drawdown",0)
-    if dd<=-40: sig.append(("폭락4단계","buy",f"나스닥 고점대비 {dd:.1f}% — 파킹현금까지 전량 저가매수"))
-    elif dd<=-30: sig.append(("폭락3단계","buy",f"나스닥 고점대비 {dd:.1f}% — 안전블록 나머지 저가매수"))
-    elif dd<=-20: sig.append(("폭락2단계","buy",f"나스닥 고점대비 {dd:.1f}% — 안전블록 절반 저가매수"))
-    elif dd<=-10: sig.append(("조정주의","warn",f"나스닥 고점대비 {dd:.1f}% — 사다리 대기, 추가하락 감시"))
+    if dd<=-40: sig.append(("폭락5단계","buy",f"나스닥 {dd:.1f}% — 파킹현금까지 전량 저가매수"))
+    elif dd<=-30: sig.append(("폭락4단계","buy",f"나스닥 {dd:.1f}% — 안전블록 나머지 절반 투입"))
+    elif dd<=-20: sig.append(("폭락3단계","buy",f"나스닥 {dd:.1f}% — 안전블록 실탄 절반 투입"))
+    elif dd<=-15: sig.append(("증액2단계","buy",f"나스닥 {dd:.1f}% — 이번달 적립 50%↑ (1,000→1,500만)"))
+    elif dd<=-10: sig.append(("증액1단계","warn",f"나스닥 {dd:.1f}% — 이번달 적립 20%↑ (1,000→1,200만)"))
+    elif dd<=-5: sig.append(("조정주의","warn",f"나스닥 {dd:.1f}% — 아직 정액 유지, 추가하락 감시"))
+
+    # 나스닥 기준 성장블록 신호가 하나도 없으면 = 정상 적립
+    if not sig:
+        sig.append(("정상","ok","나스닥 정상권 — 성장블록 계획대로 정액 적립"))
+
+    # 국장/위성 조정 신호 (0167A0 위성 추가매수 판단용, 성장블록과 별개)
+    sat=data.get("0167A0.KS",{}).get("drawdown",0)
+    if sat<=-25: sig.append(("위성폭락","buy",f"SOL반도체 {sat:.1f}% — 위성 여유분 적극 추가매수 고려"))
+    elif sat<=-20: sig.append(("위성조정","warn",f"SOL반도체 {sat:.1f}% — 위성 분할 추가매수 검토"))
+    elif sat<=-15: sig.append(("위성주의","info",f"SOL반도체 {sat:.1f}% — 위성 조정 관찰"))
     try:
         jd=datetime.datetime.strptime(JANDANG_DATE,"%Y-%m-%d").date()
         days=(jd-datetime.date.today()).days
         if 0<=days<=180: sig.append(("잔금임박","danger",f"잔금 D-{days}일 — 성장블록 전량 안전자산 전환"))
         elif days<0: sig.append(("잔금경과","info","잔금일 경과 — 플랜 종료"))
     except: pass
-    if not sig: sig.append(("정상","ok","트리거 없음 — 계획대로 정액 적립 유지"))
     return sig, round(pct,1)
 
 def main():
