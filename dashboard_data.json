@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-08 08:51 (KST 새벽 자동수집)",
+  "updated": "2026-07-08 09:00 (KST 새벽 자동수집)",
   "target_equity": 8.0,
   "current_asset": 2.0,
   "progress_pct": 25.0,
@@ -69,15 +69,15 @@
       "name": "원/달러환율",
       "block": "환율",
       "market": "환율",
-      "close": 1511.16,
-      "change": -1.15,
+      "close": 1511.77,
+      "change": -1.11,
       "high_1y": 1554.48,
-      "drawdown": -2.8,
+      "drawdown": -2.7,
       "date": "2026-07-08"
     }
   },
   "orders": {
-    "fx": 1511.16,
+    "fx": 1511.77,
     "grow_total": 140000000,
     "safe_total": 60000000,
     "satellite": {
