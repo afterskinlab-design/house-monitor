@@ -24,6 +24,7 @@ MONTHLY      = 1000   # 월 적립(만원)
 GROW_RATIO   = 0.70   # 1년차 성장블록 비중 (글라이드: 70→60→40→20)
 GROW_MIX     = {"QQQM":0.50, "VOO":0.35, "SCHD":0.15}   # 성장블록 내부 배분
 IMMEDIATE    = 0.50   # 성장블록 즉시 투입 비율 (나머지 8주 분할)
+SATELLITE_BUDGET = 3000  # 위성(SOL반도체) 추가매수용 별도 여유자금 (만원)
 # ====================================================
 
 def fetch():
@@ -72,9 +73,26 @@ def build_orders(data):
         krw = mon_grow*w
         monthly[tk] = {"shares":shares(tk,krw), "krw":round(krw)}
 
+    # 위성(SOL반도체 0167A0) 추가매수 사다리 — 별도 예산
+    sat_px = data.get("0167A0.KS",{}).get("close",0)
+    sat_dd = data.get("0167A0.KS",{}).get("drawdown",0)
+    sat_budget = SATELLITE_BUDGET*1e4
+    if sat_dd <= -25:   sat_ratio, sat_stage = 0.50, "−25% 적극매수"
+    elif sat_dd <= -20: sat_ratio, sat_stage = 0.30, "−20% 분할매수"
+    elif sat_dd <= -15: sat_ratio, sat_stage = 0.15, "−15% 관찰매수"
+    else:               sat_ratio, sat_stage = 0.0, "대기 (조정 없음)"
+    sat_krw = sat_budget * sat_ratio
+    sat_shares = int(sat_krw / sat_px) if sat_px > 0 else 0
+    satellite = {
+        "budget": round(sat_budget), "drawdown": sat_dd, "stage": sat_stage,
+        "ratio": sat_ratio, "krw": round(sat_krw), "shares": sat_shares,
+        "px": sat_px, "code": "0167A0",
+    }
+
     return {
         "fx": round(fx,2),
         "grow_total": round(grow_krw), "safe_total": round(safe_krw),
+        "satellite": satellite,
         "seed_now": seed_now, "seed_split": seed_split,
         "monthly": monthly,
         "monthly_safe": round(MONTHLY*1e4*(1-GROW_RATIO)),
