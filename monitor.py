@@ -28,20 +28,28 @@ SATELLITE_BUDGET = 3000  # 위성(SOL반도체) 추가매수용 별도 여유자
 # ====================================================
 
 def fetch():
+    import time
     out = {}
     for tk,(name,block,mkt) in WATCH.items():
-        try:
-            h = yf.Ticker(tk).history(period="1y")
-            if len(h)==0:
-                out[tk]={"name":name,"block":block,"market":mkt,"error":"데이터 없음"}; continue
-            close=float(h["Close"].iloc[-1]); prev=float(h["Close"].iloc[-2]) if len(h)>1 else close
-            high1y=float(h["Close"].max())
-            out[tk]={"name":name,"block":block,"market":mkt,"close":round(close,2),
-                "change":round((close/prev-1)*100,2),"high_1y":round(high1y,2),
-                "drawdown":round((close/high1y-1)*100,1),"date":str(h.index[-1].date())}
-            print(f"  {tk:11}{name:12} {close:>12,.2f} 고점대비{(close/high1y-1)*100:+6.1f}%")
-        except Exception as e:
-            out[tk]={"name":name,"block":block,"market":mkt,"error":str(e)}
+        last_err = ""
+        for attempt in range(3):  # SSL 일시오류 대비 최대 3회 재시도
+            try:
+                h = yf.Ticker(tk).history(period="1y")
+                if len(h)==0:
+                    last_err = "데이터 없음"; time.sleep(1); continue
+                close=float(h["Close"].iloc[-1]); prev=float(h["Close"].iloc[-2]) if len(h)>1 else close
+                high1y=float(h["Close"].max())
+                out[tk]={"name":name,"block":block,"market":mkt,"close":round(close,2),
+                    "change":round((close/prev-1)*100,2),"high_1y":round(high1y,2),
+                    "drawdown":round((close/high1y-1)*100,1),"date":str(h.index[-1].date())}
+                print(f"  {tk:11}{name:12} {close:>12,.2f} 고점대비{(close/high1y-1)*100:+6.1f}%")
+                last_err = ""
+                break
+            except Exception as e:
+                last_err = str(e)[:60]; time.sleep(2)
+        if last_err:
+            out[tk]={"name":name,"block":block,"market":mkt,"error":last_err}
+            print(f"  {tk:11}{name:12} 실패(3회): {last_err}")
     return out
 
 
