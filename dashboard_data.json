@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-09 22:16 (KST 새벽 자동수집)",
+  "updated": "2026-07-10 21:55 (KST 새벽 자동수집)",
   "target_equity": 8.0,
   "current_asset": 2.0,
   "progress_pct": 25.0,
@@ -9,102 +9,102 @@
       "name": "나스닥100",
       "block": "성장",
       "market": "미장",
-      "close": 297.78,
-      "change": 1.68,
+      "close": 298.72,
+      "change": 0.32,
       "high_1y": 306.87,
-      "drawdown": -3.0,
-      "date": "2026-07-09"
+      "drawdown": -2.7,
+      "date": "2026-07-10"
     },
     "VOO": {
       "name": "S&P500",
       "block": "성장",
       "market": "미장",
-      "close": 690.69,
-      "change": 0.79,
+      "close": 693.86,
+      "change": 0.46,
       "high_1y": 696.23,
-      "drawdown": -0.8,
-      "date": "2026-07-09"
+      "drawdown": -0.3,
+      "date": "2026-07-10"
     },
     "SCHD": {
       "name": "배당성장",
       "block": "성장",
       "market": "미장",
-      "close": 32.26,
-      "change": -0.25,
+      "close": 32.4,
+      "change": 0.43,
       "high_1y": 32.57,
-      "drawdown": -1.0,
-      "date": "2026-07-09"
+      "drawdown": -0.5,
+      "date": "2026-07-10"
     },
     "^IXIC": {
       "name": "나스닥지수",
       "block": "지표",
       "market": "미장",
-      "close": 26206.89,
-      "change": 1.3,
+      "close": 26281.61,
+      "change": 0.29,
       "high_1y": 27093.9,
-      "drawdown": -3.3,
-      "date": "2026-07-09"
+      "drawdown": -3.0,
+      "date": "2026-07-10"
     },
     "069500.KS": {
       "name": "KODEX200",
       "block": "지표",
       "market": "국장",
-      "close": 117700.0,
-      "change": 0.71,
+      "close": 120605.0,
+      "change": 2.47,
       "high_1y": 148355.0,
-      "drawdown": -20.7,
-      "date": "2026-07-09"
+      "drawdown": -18.7,
+      "date": "2026-07-10"
     },
     "0167A0.KS": {
       "name": "SOL AI반도체",
       "block": "위성",
       "market": "국장",
-      "close": 20555.0,
-      "change": 2.54,
+      "close": 21270.0,
+      "change": 3.48,
       "high_1y": 28935.0,
-      "drawdown": -29.0,
-      "date": "2026-07-09"
+      "drawdown": -26.5,
+      "date": "2026-07-10"
     },
     "KRW=X": {
       "name": "원/달러환율",
       "block": "환율",
       "market": "환율",
-      "close": 1506.48,
-      "change": -0.88,
+      "close": 1498.87,
+      "change": -0.3,
       "high_1y": 1554.48,
-      "drawdown": -3.1,
-      "date": "2026-07-09"
+      "drawdown": -3.6,
+      "date": "2026-07-10"
     }
   },
   "orders": {
-    "fx": 1506.48,
+    "fx": 1498.87,
     "grow_total": 140000000,
     "safe_total": 60000000,
     "satellite": {
       "budget": 30000000,
-      "drawdown": -29.0,
+      "drawdown": -26.5,
       "stage": "−25% 적극매수",
       "ratio": 0.5,
       "krw": 15000000,
-      "shares": 729,
-      "px": 20555.0,
+      "shares": 705,
+      "px": 21270.0,
       "code": "0167A0"
     },
     "seed_now": {
       "QQQM": {
         "shares": 78,
         "krw": 35000000,
-        "px": 297.78
+        "px": 298.72
       },
       "VOO": {
         "shares": 23,
         "krw": 24500000,
-        "px": 690.69
+        "px": 693.86
       },
       "SCHD": {
         "shares": 216,
         "krw": 10500000,
-        "px": 32.26
+        "px": 32.4
       }
     },
     "seed_split": {
@@ -156,7 +156,7 @@
     {
       "tag": "위성폭락",
       "level": "buy",
-      "msg": "SOL반도체 -29.0% — 위성 여유분 적극 추가매수 고려"
+      "msg": "SOL반도체 -26.5% — 위성 여유분 적극 추가매수 고려"
     }
   ]
 }
