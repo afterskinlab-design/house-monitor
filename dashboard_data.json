@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-16 21:59 (KST 새벽 자동수집)",
+  "updated": "2026-07-17 21:44 (KST 새벽 자동수집)",
   "target_equity": 8.0,
   "current_asset": 2.0,
   "progress_pct": 25.0,
@@ -9,41 +9,41 @@
       "name": "나스닥100",
       "block": "성장",
       "market": "미장",
-      "close": 290.68,
-      "change": -1.65,
+      "close": 286.31,
+      "change": -1.5,
       "high_1y": 306.87,
-      "drawdown": -5.3,
-      "date": "2026-07-16"
+      "drawdown": -6.7,
+      "date": "2026-07-17"
     },
     "VOO": {
       "name": "S&P500",
       "block": "성장",
       "market": "미장",
-      "close": 690.14,
-      "change": -0.53,
+      "close": 683.17,
+      "change": -1.01,
       "high_1y": 696.23,
-      "drawdown": -0.9,
-      "date": "2026-07-16"
+      "drawdown": -1.9,
+      "date": "2026-07-17"
     },
     "SCHD": {
       "name": "배당성장",
       "block": "성장",
       "market": "미장",
-      "close": 33.04,
-      "change": 2.16,
+      "close": 32.91,
+      "change": -0.39,
       "high_1y": 33.04,
-      "drawdown": 0.0,
-      "date": "2026-07-16"
+      "drawdown": -0.4,
+      "date": "2026-07-17"
     },
     "^IXIC": {
       "name": "나스닥지수",
       "block": "지표",
       "market": "미장",
-      "close": 25881.95,
-      "change": -1.47,
+      "close": 25520.24,
+      "change": -1.4,
       "high_1y": 27093.9,
-      "drawdown": -4.5,
-      "date": "2026-07-16"
+      "drawdown": -5.8,
+      "date": "2026-07-17"
     },
     "069500.KS": {
       "name": "KODEX200",
@@ -69,15 +69,15 @@
       "name": "원/달러환율",
       "block": "환율",
       "market": "환율",
-      "close": 1478.32,
-      "change": -0.64,
+      "close": 1487.46,
+      "change": 0.08,
       "high_1y": 1554.48,
-      "drawdown": -4.9,
-      "date": "2026-07-16"
+      "drawdown": -4.3,
+      "date": "2026-07-17"
     }
   },
   "orders": {
-    "fx": 1478.32,
+    "fx": 1487.46,
     "grow_total": 140000000,
     "safe_total": 60000000,
     "satellite": {
@@ -92,19 +92,19 @@
     },
     "seed_now": {
       "QQQM": {
-        "shares": 81,
+        "shares": 82,
         "krw": 35000000,
-        "px": 290.68
+        "px": 286.31
       },
       "VOO": {
         "shares": 24,
         "krw": 24500000,
-        "px": 690.14
+        "px": 683.17
       },
       "SCHD": {
         "shares": 214,
         "krw": 10500000,
-        "px": 33.04
+        "px": 32.91
       }
     },
     "seed_split": {
@@ -149,9 +149,9 @@
   },
   "signals": [
     {
-      "tag": "정상",
-      "level": "ok",
-      "msg": "나스닥 정상권 — 성장블록 계획대로 정액 적립"
+      "tag": "조정주의",
+      "level": "warn",
+      "msg": "나스닥 -5.8% — 아직 정액 유지, 추가하락 감시"
     },
     {
       "tag": "위성폭락",
